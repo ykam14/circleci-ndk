@@ -3,7 +3,7 @@ jobs:
   build:
     working_directory: ~/code
     docker:
-    - image: circleci/android:api-28-alpha
+    - image: circleci/android:api-28-ndk-r17b
     environment:
     - ANDROID_HOME: /usr/local/android-sdk-linux
     - ANDROID_NDK_HOME: /usr/local/android-sdk-linux/ndk-bundle
@@ -23,7 +23,7 @@ jobs:
           sudo wget https://dl.google.com/android/repository/android-ndk-r14-linux-x86_64.zip -P /usr/local/android-sdk-linux
           echo y | sudo unzip -d /usr/local/android-sdk-linux /usr/local/android-sdk-linux/android-ndk-r14-linux-x86_64.zip
           sudo mv /usr/local/android-sdk-linux/android-ndk-r14 /usr/local/android-sdk-linux/ndk-bundle
-          sdkmanager --update
+          sdkmanager --update 
           echo y | sdkmanager --licenses
           sudo mkdir $ANDROID_HOME/licenses
           sudo cp -r /opt/android/sdk/licenses $ANDROID_HOME
