@@ -13,8 +13,8 @@ jobs:
         command: |
           git submodule init && git submodule update
           rm -rf /opt/android/sdk/licenses
-          yes | sdkmanager --update
-          yes | sdkmanager --licenses
+          yes | sdkmanager --update || true
+          yes | sdkmanager --licenses || true
           ls -l /opt/android/sdk/licenses
           echo "sdk.dir="$ANDROID_HOME > local.properties
           echo "ndk.dir="$ANDROID_NDK_HOME >> local.properties
