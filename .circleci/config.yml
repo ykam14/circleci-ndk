@@ -12,7 +12,6 @@ jobs:
         name: Set Environmental Variables
         command: |
           git submodule init && git submodule update
-          rm -rf /opt/android/sdk/licenses
           yes | sdkmanager --update || true
           yes | sdkmanager --licenses || true
           ls -l /opt/android/sdk/licenses
