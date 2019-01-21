@@ -15,15 +15,11 @@ jobs:
         name: Set Environmental Variables
         command: |
           git submodule init && git submodule update
-          sdkmanager --update 
-          echo y | sdkmanager --licenses
           echo "sdk.dir="$ANDROID_HOME > local.properties
           echo "ndk.dir="$ANDROID_NDK_HOME >> local.properties
           echo "" >> gradle.properties
           echo "ANDLOILO_KEY_PASSWORD="$ANDLOILO_KEY_PASSWORD >> gradle.properties
           echo "ANDLOILO_KEYSTORE_PASSWORD="$ANDLOILO_KEYSTORE_PASSWORD >> gradle.properties
-          sudo mkdir -p ~/.gradle
-          sudo chmod -R 777 ~/.gradle
           echo "org.gradle.daemon=false" >> ~/.gradle/gradle.properties
     - run:
         name: Download Dependencies
