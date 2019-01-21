@@ -9,9 +9,6 @@ jobs:
     - restore_cache:
         key: jars-{{ checksum "build.gradle" }}-{{ checksum  "app/build.gradle" }}
     - run:
-        name: TEST
-        command: ls -l /opt/android/sdk/licenses
-    - run:
         name: Set Environmental Variables
         command: |
           git submodule init && git submodule update
@@ -22,9 +19,6 @@ jobs:
           echo "ANDLOILO_KEY_PASSWORD="$ANDLOILO_KEY_PASSWORD >> gradle.properties
           echo "ANDLOILO_KEYSTORE_PASSWORD="$ANDLOILO_KEYSTORE_PASSWORD >> gradle.properties
           echo "org.gradle.daemon=false" >> ~/.gradle/gradle.properties
-    - run:
-        name: TEST
-        command: ls -l /opt/android/sdk/licenses
     - run:
         name: Download Dependencies
         command: ./gradlew androidDependencies
