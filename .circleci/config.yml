@@ -12,7 +12,7 @@ jobs:
         name: Set Environmental Variables
         command: |
           git submodule init && git submodule update
-          sdkmanager emulator
+          sdkmanager "cmake;3.6.3155560"
           sdkmanager --update
           echo y | sdkmanager --licenses
           echo "sdk.dir="$ANDROID_HOME > local.properties
