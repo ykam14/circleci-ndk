@@ -14,7 +14,6 @@ jobs:
           git submodule init && git submodule update
           sdkmanager emulator
           sdkmanager --update
-          mkdir -p /opt/android/sdk/licenses
           echo y | sdkmanager --licenses
           echo "sdk.dir="$ANDROID_HOME > local.properties
           echo "ndk.dir="$ANDROID_NDK_HOME >> local.properties
@@ -22,6 +21,9 @@ jobs:
           echo "ANDLOILO_KEY_PASSWORD="$ANDLOILO_KEY_PASSWORD >> gradle.properties
           echo "ANDLOILO_KEYSTORE_PASSWORD="$ANDLOILO_KEYSTORE_PASSWORD >> gradle.properties
           echo "org.gradle.daemon=false" >> ~/.gradle/gradle.properties
+    - run:
+        name: TEST
+        command: ls /opt/android/sdk/
     - run:
         name: Download Dependencies
         command: ./gradlew androidDependencies
