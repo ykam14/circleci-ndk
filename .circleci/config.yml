@@ -12,9 +12,10 @@ jobs:
         name: Set Environmental Variables
         command: |
           git submodule init && git submodule update
-          rm -rf /opt/android/licenses
-          yes | sdkmanager --licenses
+          rm -rf /opt/android/sdk/licenses
           sdkmanager --update
+          yes | sdkmanager --licenses
+          ls -l /opt/android/sdk
           echo "sdk.dir="$ANDROID_HOME > local.properties
           echo "ndk.dir="$ANDROID_NDK_HOME >> local.properties
           echo "" >> gradle.properties
