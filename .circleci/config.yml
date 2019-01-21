@@ -12,6 +12,8 @@ jobs:
         name: Set Environmental Variables
         command: |
           git submodule init && git submodule update
+          sdkmanager emulator
+          sdkmanager --update
           echo y | sdkmanager --licenses
           echo "sdk.dir="$ANDROID_HOME > local.properties
           echo "ndk.dir="$ANDROID_NDK_HOME >> local.properties
