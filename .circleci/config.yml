@@ -23,7 +23,7 @@ jobs:
           echo "org.gradle.daemon=false" >> ~/.gradle/gradle.properties
     - run:
         name: TEST
-        command: ls /opt/android/sdk/
+        command: ls -l /opt/android/sdk/licenses
     - run:
         name: Download Dependencies
         command: ./gradlew androidDependencies
