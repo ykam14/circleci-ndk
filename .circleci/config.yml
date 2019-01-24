@@ -43,16 +43,16 @@ jobs:
       executor:
         name: default
     steps:
-    - checkout
-    - restore_gradle
-    - set_properties
-    - save_gradle
-    - run:
-        name: Run Tests
-        command: ./gradlew clean assembleRelease
-    - run:
-        name: Run Build For AndroidTest
-        command: ./gradlew assembleAndroidTest
+      - checkout
+      - restore_gradle
+      - set_properties
+      - save_gradle
+      - run:
+          name: Run Tests
+          command: ./gradlew clean assembleRelease
+      - run:
+          name: Run Build For AndroidTest
+          command: ./gradlew assembleAndroidTest
 
   deploy:
     setup:
