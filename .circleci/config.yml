@@ -8,40 +8,40 @@ executors:
 
 commands:
   restore_gradle:
-    steps:    
+    steps:
       - restore_cache:
           key: jars-{{ checksum "build.gradle" }}-{{ checksum  "app/build.gradle" }}
   set_properties:
     steps:
       - run:
-        name: set properties
-        command: |
-          git submodule init && git submodule update
-          yes | sdkmanager --update || true
-          yes | sdkmanager --licenses || true
-          ls -l /opt/android/sdk/licenses
-          echo "sdk.dir="$ANDROID_HOME > local.properties
-          echo "ndk.dir="$ANDROID_NDK_HOME >> local.properties
-          echo "" >> gradle.properties
-          echo "ANDLOILO_KEY_PASSWORD="$ANDLOILO_KEY_PASSWORD >> gradle.properties
-          echo "ANDLOILO_KEYSTORE_PASSWORD="$ANDLOILO_KEYSTORE_PASSWORD >> gradle.properties
-          echo "org.gradle.daemon=false" >> ~/.gradle/gradle.properties
+          name: set properties
+          command: |
+            git submodule init && git submodule update
+            yes | sdkmanager --update || true
+            yes | sdkmanager --licenses || true
+            ls -l /opt/android/sdk/licenses
+            echo "sdk.dir="$ANDROID_HOME > local.properties
+            echo "ndk.dir="$ANDROID_NDK_HOME >> local.properties
+            echo "" >> gradle.properties
+            echo "ANDLOILO_KEY_PASSWORD="$ANDLOILO_KEY_PASSWORD >> gradle.properties
+            echo "ANDLOILO_KEYSTORE_PASSWORD="$ANDLOILO_KEYSTORE_PASSWORD >> gradle.properties
+            echo "org.gradle.daemon=false" >> ~/.gradle/gradle.properties
       - run:
-        name: Download Dependencies
-        command: ./gradlew androidDependencies
-        
+          name: Download Dependencies
+          command: ./gradlew androidDependencies
+
   save_gradle:
     steps:
       - save_cache:
-        paths:
-          - ~/.gradle
-        key: jars-{{ checksum "build.gradle" }}-{{ checksum  "app/build.gradle" }}
+          paths:
+            - ~/.gradle
+          key: jars-{{ checksum "build.gradle" }}-{{ checksum  "app/build.gradle" }}
 
 jobs:
   build:
     setup:
       executor:
-        name: default      
+        name: default
     steps:
     - checkout
     - restore_gradle
@@ -53,24 +53,24 @@ jobs:
     - run:
         name: Run Build For AndroidTest
         command: ./gradlew assembleAndroidTest
-        
+
   deploy:
     build:
       setup:
         executor:
-          name: default      
+          name: default
       steps:
         - checkout
         - restore_gradle
         - set_properties
         - save_gradle
         - run:
-          name: Run Tests
-          command: ./gradlew clean assembleRelease
-        - run: 
-          name: deploy
-          command: echo deployed!!
-        
+            name: Run Tests
+            command: ./gradlew clean assembleRelease
+        - run:
+            name: deploy
+            command: echo deployed!!
+
 workflows:
   version: 2.1
   workflow:
