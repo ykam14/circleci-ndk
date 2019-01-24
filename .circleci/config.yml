@@ -55,6 +55,9 @@ jobs:
   deploy:
     executor:
       name: default
+    branches:
+      only:
+        - master
     steps:
       - checkout
       - restore_gradle
