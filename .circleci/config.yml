@@ -1,16 +1,15 @@
 version: 2.1
-
 executors:
   default:
     working_directory: ~/code
     docker:
       - image: circleci/android:api-28-ndk-r17b
-
 commands:
   restore_gradle:
     steps:
       - restore_cache:
           key: jars-{{ checksum "build.gradle" }}-{{ checksum  "app/build.gradle" }}
+
   set_properties:
     steps:
       - run:
@@ -39,9 +38,8 @@ commands:
 
 jobs:
   build:
-    setup:
-      executor:
-        name: default
+    executor:
+      name: default
     steps:
       - checkout
       - restore_gradle
@@ -55,9 +53,8 @@ jobs:
           command: ./gradlew assembleAndroidTest
 
   deploy:
-    setup:
-      executor:
-        name: defaul
+    executor:
+      name: default
     steps:
       - checkout
       - restore_gradle
@@ -80,8 +77,6 @@ workflows:
             ignore:
               - master
       - deploy:
-        requires:
-          - build
         filters:
           branches:
             only:
