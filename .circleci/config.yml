@@ -55,21 +55,20 @@ jobs:
         command: ./gradlew assembleAndroidTest
 
   deploy:
-    build:
-      setup:
-        executor:
-          name: default
-      steps:
-        - checkout
-        - restore_gradle
-        - set_properties
-        - save_gradle
-        - run:
-            name: Run Tests
-            command: ./gradlew clean assembleRelease
-        - run:
-            name: deploy
-            command: echo deployed!!
+    setup:
+      executor:
+        name: defaul
+    steps:
+      - checkout
+      - restore_gradle
+      - set_properties
+      - save_gradle
+      - run:
+          name: Run Tests
+          command: ./gradlew clean assembleRelease
+      - run:
+          name: deploy
+          command: echo deployed!!
 
 workflows:
   version: 2.1
