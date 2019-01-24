@@ -55,9 +55,6 @@ jobs:
   deploy:
     executor:
       name: default
-    branches:
-      only:
-        - master
     steps:
       - checkout
       - restore_gradle
@@ -75,10 +72,10 @@ workflows:
   workflow:
     jobs:
       - build:
-        filters:
-          branches:
-            ignore: master
+          filters:
+            branches:
+              ignore: master
       - deploy:
-        filters:
-          branches:
-            only: master
+          filters:
+            branches:
+              only: master
