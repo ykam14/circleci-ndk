@@ -34,18 +34,31 @@ jobs:
     - run:
         name: Run Build For AndroidTest
         command: ./gradlew assembleAndroidTest
-    - store_artifacts:
-        path: app/build/outputs/apk/release
-        destination: apk
-    - store_artifacts:
-        path: app/build/outputs/apk/androidTest/debug
-        destination: apk
+    - persist_to_workspace:
+        root: ./apk_files
+        paths:
+          - app/build/outputs/apk/release/apk
+        
+  deploy:
+    working_directory: ~/code
+    docker:
+    - image: circleci/android:api-28-ndk-r17b
+    steps:
+    -attach_workspace:
+        at: ./apk_files
+    - run:
+        name: Deploy
+        command: ls -l app/build/outputs/apk/release/apk
+        
 workflows:
   version: 2
   workflow:
     jobs:
     - build:
+    - deploy:
+        requires:
+            - build
         filters:
-          branches:
-            only:
-            - master
+            branches:
+              only:
+              - master
