@@ -1,15 +1,20 @@
-version: 2
-jobs:
-  build:
+version: 2.1
+
+executors:
+  default:
     working_directory: ~/code
     docker:
-    - image: circleci/android:api-28-ndk-r17b
+      - image: circleci/android:api-28-ndk-r17b
+
+commands:
+  restore_gradle:
+    steps:    
+      - restore_cache:
+          key: jars-{{ checksum "build.gradle" }}-{{ checksum  "app/build.gradle" }}
+  set_properties:
     steps:
-    - checkout
-    - restore_cache:
-        key: jars-{{ checksum "build.gradle" }}-{{ checksum  "app/build.gradle" }}
-    - run:
-        name: Set Environmental Variables
+      - run:
+        name: set properties
         command: |
           git submodule init && git submodule update
           yes | sdkmanager --update || true
@@ -21,44 +26,64 @@ jobs:
           echo "ANDLOILO_KEY_PASSWORD="$ANDLOILO_KEY_PASSWORD >> gradle.properties
           echo "ANDLOILO_KEYSTORE_PASSWORD="$ANDLOILO_KEYSTORE_PASSWORD >> gradle.properties
           echo "org.gradle.daemon=false" >> ~/.gradle/gradle.properties
-    - run:
+     - run:
         name: Download Dependencies
         command: ./gradlew androidDependencies
-    - save_cache:
+        
+  save_gradle:
+    steps:
+      - save_cache:
         paths:
-        - ~/.gradle
+          - ~/.gradle
         key: jars-{{ checksum "build.gradle" }}-{{ checksum  "app/build.gradle" }}
+
+jobs:
+  build:
+    setup:
+      executor:
+        name: default      
+    steps:
+    - checkout
+    - restore_gradle
+    - set_properties
+    - save_gradle
     - run:
         name: Run Tests
         command: ./gradlew clean assembleRelease
     - run:
         name: Run Build For AndroidTest
         command: ./gradlew assembleAndroidTest
-    - persist_to_workspace:
-        root: ./apk_files
-        paths:
-          - app/build/outputs/apk/release/apk
         
   deploy:
-    working_directory: ~/code
-    docker:
-    - image: circleci/android:api-28-ndk-r17b
-    steps:
-    -attach_workspace:
-        at: ./apk_files
-    - run:
-        name: Deploy
-        command: ls -l app/build/outputs/apk/release/apk
+    build:
+      setup:
+        executor:
+          name: default      
+      steps:
+        - checkout
+        - restore_gradle
+        - set_properties
+        - save_gradle
+        - run:
+          name: Run Tests
+          command: ./gradlew clean assembleRelease
+        - run: 
+          name: deploy
+          command: echo deployed!!
         
 workflows:
-  version: 2
+  version: 2.1
   workflow:
     jobs:
-    - build:
-    - deploy:
-        requires:
-            - build
+      - build:
         filters:
-            branches:
-              only:
+          branches:
+            ignore:
+              - master
+      - deploy:
+        requires:
+          - build
+        filters:
+          branches:
+            only:
               - master
